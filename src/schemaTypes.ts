@@ -11,27 +11,29 @@ export type TextComponent = {
   name: string;
   label: string;
   component: 'text';
-  required: boolean;
+  required?: boolean;
 };
 
 export type SelectComponent = {
   name: string;
   label: string;
   component: 'select';
+  required?: boolean;
   options: SelectOption[];
-  required: boolean;
 };
 
 export type RangePickerComponent = {
   name: [string, string];
-  component: 'range_picker';
   label: [string, string];
-  required: boolean;
+  rangeLabel: string;
+  rangeName: string;
+  component: 'range_picker';
+  required?: boolean;
 };
 
 export type TextareaComponent = {
   name: string;
   label: string;
   component: 'textarea';
-  required: boolean;
+  required?: boolean;
 };

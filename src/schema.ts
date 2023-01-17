@@ -9,10 +9,9 @@ export const schema: Component[] = [
   },
   {
     name: 'type',
-    component: 'select',
     label: 'Type',
+    component: 'select',
     required: true,
-
     options: [
       {
         label: 'Generic',
@@ -26,14 +25,15 @@ export const schema: Component[] = [
   },
   {
     name: ['startDate', 'endDate'],
-    component: 'range_picker',
     label: ['Start date', 'End date'],
+    rangeLabel: 'Date',
+    rangeName: 'date',
+    component: 'range_picker',
     required: true,
   },
   {
     name: 'description',
     label: 'Description',
     component: 'textarea',
-    required: false,
   },
 ];
