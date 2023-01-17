@@ -1,9 +1,13 @@
-import { Button, Input, Table, Space, Tag } from 'antd';
+import { useState } from 'react';
+import { Button, Input, Table } from 'antd';
 import type { ColumnsType, ColumnType } from 'antd/es/table';
+
 import { schema } from './schema';
 import { data } from './data';
 import { Event } from './dataTypes';
 import { Component, RangePickerComponent } from './schemaTypes';
+import EventModal from './EventModal';
+import EventForm from './EventForm';
 
 const { Search } = Input;
 
@@ -31,13 +35,18 @@ const columns: ColumnsType<Event> = schema.flatMap((item) => {
 });
 
 export default function EventsDashboard() {
+  const [showModal, setShowModal] = useState(false);
+
   const onSearch = (value: string) => console.log(value);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '5em', justifyContent: 'center' }}>
       <div style={{ display: 'flex', gap: '2em' }}>
         <Search placeholder="input search text" allowClear onSearch={onSearch} style={{ width: 200 }} />
-        <Button>Create event</Button>
+        <Button onClick={() => setShowModal(true)}>Create event</Button>
+        <EventModal showModal={showModal} onSave={() => setShowModal(false)} onCancel={() => setShowModal(false)}>
+          <EventForm />
+        </EventModal>
       </div>
       <Table columns={columns} dataSource={dataSource} />
     </div>
