@@ -1,10 +1,14 @@
 import { ReactNode } from 'react';
-import { Form, Input, Button, Select, DatePicker, Row, Col } from 'antd';
+import { Form, Input, Button, Select, DatePicker, Row, Col, Alert, Spin } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
+import { useQuery } from 'react-query';
 
-import { schema } from './schema';
-import { Component, ComponentType } from './schemaTypes';
-import { isRangePicker, isSelect } from './utils';
+import { Component, ComponentType, RangePickerComponent } from './schemaTypes';
+import { isRangePicker, isSelect } from './schemaUtils';
+import { Event } from './dataTypes';
+
+import { getSchema } from './apis/events';
+import { AxiosError } from 'axios';
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
@@ -23,18 +27,59 @@ const formComponents: FormComponent = {
 function getLabel(item: Component) {
   return isRangePicker(item) ? item.rangeLabel : item.label;
 }
+
 function getName(item: Component) {
   return isRangePicker(item) ? item.rangeName : item.name;
 }
+
 function getComponent(item: Component) {
   let options = isSelect(item) ? item.options : undefined;
   return formComponents[item.component](options);
 }
 
-const rangePickerNames = schema.filter(isRangePicker).map((item) => item.rangeName);
+function updateRangePickerProperties(event: any, schema?: Component[]) {
+  if (!schema || !event) return;
 
-export default function EventForm() {
+  const dateFormat = 'YYYY-MM-DD';
+  const components = schema.filter(isRangePicker);
+
+  components.forEach((component) => {
+    const rangeValues: any[] = event[component.rangeName];
+    const formattedDates: string[] = rangeValues.map((value: any) => value.format(dateFormat));
+
+    component.name.forEach((name, index) => {
+      event[name] = formattedDates[index];
+    });
+
+    delete event[component.rangeName];
+  });
+}
+
+type EventFormProps = {
+  onClose: (event: Event) => void;
+};
+
+export default function EventForm({ onClose }: EventFormProps) {
+  const {
+    data: schema,
+    error: schemaError,
+    isError: isSchemaError,
+    isLoading: isSchemaLoading,
+  } = useQuery<Component[], AxiosError>('schema', getSchema);
+
   const [form] = Form.useForm();
+
+  if (isSchemaError) {
+    return <Alert message="Error" description={schemaError?.message} type="error" />;
+  }
+  if (isSchemaLoading) {
+    return <Spin tip="Loading..." />;
+  }
+
+  const handleEventCreation = (event: Event) => {
+    updateRangePickerProperties(event, schema);
+    onClose(event);
+  };
 
   return (
     <Form
@@ -43,18 +88,9 @@ export default function EventForm() {
       wrapperCol={{ span: 24 }}
       layout="horizontal"
       labelWrap
-      onFinish={(event: any) => {
-        const dateFormat = 'YYYY-MM-DD';
-
-        rangePickerNames.forEach((field) => {
-          const dateValues = event[field];
-          event[field] = [dateValues[0].format(dateFormat), dateValues[1].format(dateFormat)];
-        });
-
-        console.log('event', event);
-      }}
+      onFinish={handleEventCreation}
     >
-      {schema.map((item, index) => (
+      {schema?.map((item: Component, index: number) => (
         <Form.Item
           key={`${item.component}-${index}`}
           name={getName(item)}

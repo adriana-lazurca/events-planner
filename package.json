@@ -4,15 +4,20 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "start": "vite",
+    "frontend": "vite",
+    "backend": "json-server --watch data/db.json --port 3001",
+    "start": "concurrently \"npm run frontend\" \"npm run backend\"",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
     "antd": "^5.1.4",
+    "axios": "^1.2.3",
+    "concurrently": "^7.6.0",
     "json-server": "^0.17.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-query": "^3.39.2"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",
