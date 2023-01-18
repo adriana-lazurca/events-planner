@@ -79,6 +79,7 @@ export default function EventForm({ onClose }: EventFormProps) {
   const handleEventCreation = (event: Event) => {
     updateRangePickerProperties(event, schema);
     onClose(event);
+    form.resetFields();
   };
 
   return (

@@ -60,7 +60,12 @@ export default function EventsDashboard() {
     isLoading: isEventsLoading,
   } = useQuery<Event[], AxiosError>([EVENTS], getEvents);
 
-  const { mutate: addEvent } = useMutation(createEvent);
+  const { mutate: addEvent } = useMutation({
+    mutationFn: createEvent,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [EVENTS] });
+    },
+  });
 
   const queryClient = useQueryClient();
 
@@ -95,12 +100,7 @@ export default function EventsDashboard() {
           <EventForm
             onClose={async (event: Event) => {
               addEvent(event);
-              await queryClient.invalidateQueries([EVENTS]);
               closeModal();
-
-              // TODO - check out refetch
-              // queryClient.setQueryData([EVENTS, { id: event.id }], event);
-              // refetch({ queryKey: EVENTS });
             }}
           />
         </EventModal>
