@@ -13,6 +13,17 @@ export const getEvents = async (): Promise<Event[]> => {
   }
 };
 
+export const searchEvents = async (searchText: string): Promise<Event[]> => {
+  const url = `http://localhost:3001/events/?q=${searchText}`;
+  try {
+    const { data } = await axios.get(url);
+    return data;
+  } catch (error) {
+    console.error('No data found!', error);
+    throw error;
+  }
+};
+
 export const createEvent = async (event: Event): Promise<Event> => {
   const url = 'http://localhost:3001/events';
   try {

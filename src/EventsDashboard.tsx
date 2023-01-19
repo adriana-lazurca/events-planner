@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { Alert, Button, Input, Spin, Table } from 'antd';
 import type { ColumnsType, ColumnType } from 'antd/es/table';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { AxiosError } from 'axios';
 
 import { Event } from './dataTypes';
 import { Component, RangePickerComponent } from './schemaTypes';
 import EventModal from './EventModal';
 import EventForm from './EventForm';
-import { createEvent, getEvents, getSchema } from './apis/events';
-import { AxiosError } from 'axios';
+import { createEvent, getSchema, searchEvents } from './apis/events';
 import { isRangePicker } from './schemaUtils';
 import { EVENTS, SCHEMA } from './queryKeys';
 
@@ -46,6 +46,9 @@ function addKeyToEvents(events?: Event[]): Event[] {
 }
 
 export default function EventsDashboard() {
+  const [searchText, setSearchText] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
   const {
     data: schema,
     error: schemaError,
@@ -58,7 +61,9 @@ export default function EventsDashboard() {
     error: eventsError,
     isError: isEventsError,
     isLoading: isEventsLoading,
-  } = useQuery<Event[], AxiosError>([EVENTS], getEvents);
+  } = useQuery<Event[], AxiosError>([EVENTS, searchQuery], () => searchEvents(searchQuery), {
+    enabled: Boolean(searchQuery) || searchQuery === '',
+  });
 
   const { mutate: addEvent } = useMutation({
     mutationFn: createEvent,
@@ -90,9 +95,11 @@ export default function EventsDashboard() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '5em', justifyContent: 'center' }}>
       <div style={{ display: 'flex', gap: '2em' }}>
         <Search
-          placeholder="input search text"
+          placeholder="Search events"
           allowClear
-          onSearch={(value: string) => console.log(value)}
+          value={searchText}
+          onChange={(event) => setSearchText(event.target.value)}
+          onSearch={(text) => setSearchQuery(text)}
           style={{ width: 200 }}
         />
         <Button onClick={() => setShowModal(true)}>Create event</Button>
