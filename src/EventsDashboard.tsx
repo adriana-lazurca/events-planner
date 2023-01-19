@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Alert, Button, Input, Spin, Table } from 'antd';
-import type { ColumnsType, ColumnType } from 'antd/es/table';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { AxiosError } from 'axios';
+import { Alert, Button, Col, Input, Layout, Row, Space, Spin, Table } from 'antd';
+import type { ColumnsType, ColumnType } from 'antd/es/table';
+import { Content, Header } from 'antd/es/layout/layout';
 
 import { Event } from './dataTypes';
 import { Component, RangePickerComponent } from './schemaTypes';
@@ -92,8 +93,8 @@ export default function EventsDashboard() {
   const dataSource = addKeyToEvents(events);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '5em', justifyContent: 'center' }}>
-      <div style={{ display: 'flex', gap: '2em' }}>
+    <div style={{ padding: '2.5rem 4rem' }}>
+      <Row>
         <Search
           placeholder="Search events"
           allowClear
@@ -102,17 +103,22 @@ export default function EventsDashboard() {
           onSearch={(text) => setSearchQuery(text)}
           style={{ width: 200 }}
         />
-        <Button onClick={() => setShowModal(true)}>Create event</Button>
-        <EventModal showModal={showModal} onSave={closeModal} onCancel={closeModal}>
-          <EventForm
-            onClose={async (event: Event) => {
-              addEvent(event);
-              closeModal();
-            }}
-          />
-        </EventModal>
-      </div>
-      <Table columns={columns} dataSource={dataSource} />
+        <Button
+          style={{ marginLeft: 'auto', color: 'white', backgroundColor: '#4d4a4a' }}
+          onClick={() => setShowModal(true)}
+        >
+          Create event
+        </Button>
+      </Row>
+      <Table columns={columns} dataSource={dataSource} style={{ margin: 'auto', paddingTop: '3rem' }} />
+      <EventModal showModal={showModal} onSave={closeModal} onCancel={closeModal}>
+        <EventForm
+          onClose={async (event: Event) => {
+            addEvent(event);
+            closeModal();
+          }}
+        />
+      </EventModal>
     </div>
   );
 }
