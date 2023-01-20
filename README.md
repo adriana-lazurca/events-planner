@@ -1,6 +1,6 @@
 # Events Planner
 
-The project is an application where you can see some events, and also add new ones.
+This is an application where you can manage events.
 
 ### Technologies:
 
