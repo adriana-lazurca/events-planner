@@ -4,13 +4,10 @@ import { AxiosError } from 'axios';
 import { Alert, Button, Input, Row, Spin, Table } from 'antd';
 import type { ColumnsType, ColumnType } from 'antd/es/table';
 
-import { Event } from './dataTypes';
-import { Component, RangePickerComponent } from './schemaTypes';
-import EventModal from './EventModal';
-import EventForm from './EventForm';
-import { createEvent, getSchema, searchEvents } from './apis/events';
-import { isRangePicker } from './schemaUtils';
-import { EVENTS, SCHEMA } from './queryKeys';
+import { EventForm, EventModal } from '../features/events/components';
+import { createEvent, getSchema, searchEvents } from '../features/events/services';
+import { Component, Event, RangePickerComponent } from '../features/events/types';
+import { isRangePicker, QueryKeys } from '../features/events/utils';
 
 const { Search } = Input;
 
@@ -54,21 +51,21 @@ export default function EventsDashboard() {
     error: schemaError,
     isError: isSchemaError,
     isLoading: isSchemaLoading,
-  } = useQuery<Component[], AxiosError>([SCHEMA], getSchema);
+  } = useQuery<Component[], AxiosError>([QueryKeys.schema], getSchema);
 
   const {
     data: events,
     error: eventsError,
     isError: isEventsError,
     isLoading: isEventsLoading,
-  } = useQuery<Event[], AxiosError>([EVENTS, searchQuery], () => searchEvents(searchQuery), {
+  } = useQuery<Event[], AxiosError>([QueryKeys.events, searchQuery], () => searchEvents(searchQuery), {
     enabled: Boolean(searchQuery) || searchQuery === '',
   });
 
   const { mutate: addEvent } = useMutation({
     mutationFn: createEvent,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [EVENTS] });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.events] });
     },
   });
 

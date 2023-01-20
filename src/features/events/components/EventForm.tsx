@@ -1,14 +1,12 @@
 import { ReactNode } from 'react';
 import { Form, Input, Button, Select, DatePicker, Row, Col, Alert, Spin } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
+import { AxiosError } from 'axios';
 import { useQuery } from 'react-query';
 
-import { Component, ComponentType, RangePickerComponent } from './schemaTypes';
-import { isRangePicker, isSelect } from './schemaUtils';
-import { Event } from './dataTypes';
-
-import { getSchema } from './apis/events';
-import { AxiosError } from 'axios';
+import { Component, ComponentType, Event } from '../types';
+import { isRangePicker, isSelect } from '../utils';
+import { getSchema } from '../services';
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;

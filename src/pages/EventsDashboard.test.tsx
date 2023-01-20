@@ -4,11 +4,11 @@ import { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import {} from './setup';
 
-import EventsDashboard from '../EventsDashboard';
-import { events, schema } from './mockData';
-import Endpoints from '../apis/endpoints';
+import EventsDashboard from './EventsDashboard';
+import {} from '../tests';
+import { events, schema } from '../tests';
+import { Endpoints } from '../features/events/services';
 
 const mock = new MockAdapter(axios);
 mock.onGet(Endpoints.getSchema).reply(200, schema);

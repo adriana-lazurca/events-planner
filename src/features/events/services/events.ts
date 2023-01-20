@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { Event } from '../dataTypes';
-import { Component } from '../schemaTypes';
-import Endpoints from './endpoints';
+
+import { Component, Event } from '../types';
+import { Endpoints } from './endpoints';
 
 export const getEvents = async (): Promise<Event[]> => {
   try {
