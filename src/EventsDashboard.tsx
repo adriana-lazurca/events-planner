@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { AxiosError } from 'axios';
-import { Alert, Button, Col, Input, Layout, Row, Space, Spin, Table } from 'antd';
+import { Alert, Button, Input, Row, Spin, Table } from 'antd';
 import type { ColumnsType, ColumnType } from 'antd/es/table';
-import { Content, Header } from 'antd/es/layout/layout';
 
 import { Event } from './dataTypes';
 import { Component, RangePickerComponent } from './schemaTypes';

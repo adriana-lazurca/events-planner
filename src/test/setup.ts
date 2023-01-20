@@ -1,0 +1,3 @@
+import {} from './windowSetup';
+
+export {};

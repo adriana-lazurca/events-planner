@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { Event } from '../dataTypes';
 import { Component } from '../schemaTypes';
+import Endpoints from './endpoints';
 
 export const getEvents = async (): Promise<Event[]> => {
-  const url = 'http://localhost:3001/events';
   try {
-    const { data } = await axios.get(url);
+    const { data } = await axios.get(Endpoints.getEvents);
     return data;
   } catch (error) {
     console.error('No data found!', error);
@@ -14,9 +14,8 @@ export const getEvents = async (): Promise<Event[]> => {
 };
 
 export const searchEvents = async (searchText: string): Promise<Event[]> => {
-  const url = `http://localhost:3001/events/?q=${searchText}`;
   try {
-    const { data } = await axios.get(url);
+    const { data } = await axios.get(Endpoints.searchEvents(searchText));
     return data;
   } catch (error) {
     console.error('No data found!', error);
@@ -25,9 +24,8 @@ export const searchEvents = async (searchText: string): Promise<Event[]> => {
 };
 
 export const createEvent = async (event: Event): Promise<Event> => {
-  const url = 'http://localhost:3001/events';
   try {
-    const { data } = await axios.post(url, event);
+    const { data } = await axios.post(Endpoints.getEvents, event);
     return data;
   } catch (error) {
     console.error("Can't create event!", error);
@@ -36,9 +34,8 @@ export const createEvent = async (event: Event): Promise<Event> => {
 };
 
 export const getSchema = async (): Promise<Component[]> => {
-  const url = 'http://localhost:3001/schema';
   try {
-    const { data } = await axios.get(url);
+    const { data } = await axios.get(Endpoints.getSchema);
     return data;
   } catch (error) {
     console.error('No schema found!', error);
