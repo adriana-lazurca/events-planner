@@ -1,11 +1,11 @@
 import { ReactNode } from 'react';
+import { useQuery } from 'react-query';
+import { AxiosError } from 'axios';
 import { Form, Input, Button, Select, DatePicker, Row, Col, Alert, Spin } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
-import { AxiosError } from 'axios';
-import { useQuery } from 'react-query';
 
 import { Component, ComponentType, Event } from '../types';
-import { isRangePicker, isSelect } from '../utils';
+import { isRangePicker, isSelect, QueryKeys } from '../utils';
 import { getSchema } from '../services';
 
 const { RangePicker } = DatePicker;
@@ -17,7 +17,9 @@ type FormComponent = {
 
 const formComponents: FormComponent = {
   text: () => <Input />,
-  select: (options: DefaultOptionType[]) => <Select options={options}></Select>,
+  select: ({ options, testId }: { options: DefaultOptionType[]; testId: string }) => (
+    <Select data-testid={testId} options={options}></Select>
+  ),
   range_picker: () => <RangePicker style={{ width: '100%' }} />,
   textarea: () => <TextArea rows={4} />,
 };
@@ -31,8 +33,9 @@ function getName(item: Component) {
 }
 
 function getComponent(item: Component) {
-  let options = isSelect(item) ? item.options : undefined;
-  return formComponents[item.component](options);
+  const options = isSelect(item) ? item.options : undefined;
+
+  return formComponents[item.component]({ options, testId: item.name });
 }
 
 function updateRangePickerProperties(event: any, schema?: Component[]) {
@@ -54,16 +57,16 @@ function updateRangePickerProperties(event: any, schema?: Component[]) {
 }
 
 type EventFormProps = {
-  onClose: (event: Event) => void;
+  onSave: (event: Event) => void;
 };
 
-export default function EventForm({ onClose }: EventFormProps) {
+export default function EventForm({ onSave }: EventFormProps) {
   const {
     data: schema,
     error: schemaError,
     isError: isSchemaError,
     isLoading: isSchemaLoading,
-  } = useQuery<Component[], AxiosError>('schema', getSchema);
+  } = useQuery<Component[], AxiosError>(QueryKeys.schema, getSchema);
 
   const [form] = Form.useForm();
 
@@ -76,7 +79,7 @@ export default function EventForm({ onClose }: EventFormProps) {
 
   const handleEventCreation = (event: Event) => {
     updateRangePickerProperties(event, schema);
-    onClose(event);
+    onSave(event);
     form.resetFields();
   };
 
