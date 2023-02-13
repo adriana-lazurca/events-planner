@@ -3,19 +3,19 @@ import axios from 'axios';
 import { Component, Event } from '../types';
 import { Endpoints } from './endpoints';
 
-export const getEvents = async (): Promise<Event[]> => {
+export const getSchema = async (): Promise<Component[]> => {
   try {
-    const { data } = await axios.get(Endpoints.getEvents);
+    const { data } = await axios.get(Endpoints.getSchema);
     return data;
   } catch (error) {
-    console.error('No data found!', error);
+    console.error('No schema found!', error);
     throw error;
   }
 };
 
-export const searchEvents = async (searchText: string): Promise<Event[]> => {
+export const getEvents = async (): Promise<Event[]> => {
   try {
-    const { data } = await axios.get(Endpoints.searchEvents(searchText));
+    const { data } = await axios.get(Endpoints.getEvents);
     return data;
   } catch (error) {
     console.error('No data found!', error);
@@ -33,12 +33,12 @@ export const createEvent = async (event: Event): Promise<Event> => {
   }
 };
 
-export const getSchema = async (): Promise<Component[]> => {
+export const searchEvents = async (searchText: string): Promise<Event[]> => {
   try {
-    const { data } = await axios.get(Endpoints.getSchema);
+    const { data } = await axios.get(Endpoints.searchEvents(searchText));
     return data;
   } catch (error) {
-    console.error('No schema found!', error);
+    console.error('No data found!', error);
     throw error;
   }
 };
