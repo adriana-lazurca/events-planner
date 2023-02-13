@@ -1,4 +1,6 @@
-export const schema = [
+import { Component, Event } from '../features/events/types';
+
+export const schema: Component[] = [
   {
     name: 'title',
     label: 'Title',
@@ -21,9 +23,22 @@ export const schema = [
       },
     ],
   },
+  {
+    name: ['startDate', 'endDate'],
+    label: ['Start date', 'End date'],
+    rangeLabel: 'Date',
+    rangeName: 'date',
+    component: 'range_picker',
+    required: true,
+  },
+  {
+    name: 'description',
+    label: 'Description',
+    component: 'textarea',
+  },
 ];
 
-export const events = [
+export const events: Event[] = [
   {
     id: '1',
     title: 'Champions league',
