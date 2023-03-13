@@ -6,8 +6,8 @@ This is an application where you can manage events.
 
 - **ReactJS**
 - **Json-server** for mocking the back-end
-- **React-query** for API calls
-- **Axios** for for calling back-end APIs
+- **React-query** for data fetching logic
+- **Axios** for calling back-end APIs
 - **Ant-design** for styling
 - **Concurrently** for running front-end and back-end in parallel
 
